@@ -3,29 +3,39 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <title>Chrismaic International Limited — Construction in Murang'a, Kenya</title>
 <style>
-  /* ============ DESIGN TOKENS ============ */
+  /* ============ DESIGN TOKENS (STRICT THEMING) ============ */
   :root {
-    color-scheme: light dark;
-    --ink: light-dark(#1a1a18, #ece9e2);
-    --paper: light-dark(#f6f3ec, #121210);
-    --paper-2: light-dark(#efe9dd, #1c1c18);
-    --card: light-dark(#ffffff, #1e1e1a);
-    --muted: light-dark(#6b665c, #9a958a);
-    --accent: light-dark(#d4552a, #e8703f);
-    --border: light-dark(rgba(0,0,0,.07), rgba(255,255,255,.08));
-    --shadow: light-dark(0 18px 40px -18px rgba(0,0,0,.35), 0 18px 40px -18px rgba(0,0,0,.7));
+    /* Light Mode Defaults */
+    --ink: #1a1a18;
+    --paper: #f6f3ec;
+    --paper-2: #efe9dd;
+    --card: #ffffff;
+    --muted: #6b665c;
+    --accent: #d4552a;
+    --border: rgba(0,0,0,.07);
+    --shadow: 0 18px 40px -18px rgba(0,0,0,.35);
     --radius: 18px;
     --font: "Inter", "Helvetica Neue", Arial, sans-serif;
   }
 
-  html[data-theme="light"] { color-scheme: light; }
-  html[data-theme="dark"]  { color-scheme: dark; }
+  /* Dark Mode Override */
+  html[data-theme="dark"] {
+    --ink: #ece9e2;
+    --paper: #121210;
+    --paper-2: #1c1c18;
+    --card: #1e1e1a;
+    --muted: #9a958a;
+    --accent: #e8703f;
+    --border: rgba(255,255,255,.08);
+    --shadow: 0 18px 40px -18px rgba(0,0,0,.7);
+  }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; color-scheme: light; }
+  html[data-theme="dark"] { color-scheme: dark; }
 
   body {
     font-family: var(--font); background: var(--paper); color: var(--ink);
@@ -39,7 +49,7 @@
     width: 100%; 
     max-width: 1240px; 
     margin-inline: auto; 
-    padding-inline: clamp(1.5rem, 4vw, 3rem); 
+    padding-inline: clamp(1rem, 4vw, 3rem); 
   }
   section { padding: clamp(4rem, 9vw, 8rem) 0; position: relative; }
 
@@ -56,7 +66,7 @@
   /* ============ NAV ============ */
   nav {
     position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px);
-    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    background: color-mix(in srgb, var(--paper) 85%, transparent);
     border-bottom: 1px solid var(--border);
   }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; }
@@ -67,7 +77,6 @@
   .nav-links a:hover { opacity: 1; }
   .nav-actions { display: flex; align-items: center; gap: 1rem; }
   
-  /* Hide nav links on mobile */
   @media (max-width: 860px) { 
     .nav-links { display: none; } 
   }
@@ -76,6 +85,7 @@
     display: inline-block; padding: .85rem 1.6rem; border-radius: 999px;
     background: var(--ink); color: var(--paper); font-weight: 700; text-decoration: none;
     font-size: .92rem; border: none; cursor: pointer; transition: transform .25s ease, background .25s;
+    text-align: center;
   }
   .btn:hover { transform: translateY(-3px) rotateX(8deg); background: var(--accent); color: #fff; }
   .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
@@ -207,7 +217,7 @@
   .meter .from { color: var(--muted); text-decoration: line-through; }
   .meter .arrow { color: var(--accent); font-size: 1.2rem; }
   .tier .bar { margin-top: 1rem; height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 10%, transparent); overflow: hidden; transform: translateZ(18px); }
-  .tier .bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: var(--w, 50%); transition: width .8s ease; }
+  .tier .bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), #2f4a3c); width: var(--w, 50%); transition: width .8s ease; }
   .tier:hover .bar i { width: 100%; }
 
   /* ============ EXPANDED PORTFOLIO ============ */
@@ -232,8 +242,13 @@
   .chip { padding: .8rem 1.4rem; border-radius: 999px; background: var(--card); border: 1px solid var(--border); font-weight: 700; font-size: .85rem; color: var(--muted); transition: transform .3s ease; }
   .chip:hover { transform: translateZ(20px) rotateY(8deg); color: var(--ink); }
 
-  /* ============ CTA ============ */
-  .cta { background: light-dark(#1a1a18, #0a0a08); color: #f6f3ec; text-align: center; perspective: 1200px; }
+  /* ============ CTA (LOCKED COLORS) ============ */
+  .cta { 
+    background: #1a1a18; /* Always dark for contrast */
+    color: #f6f3ec;      /* Always light text */
+    text-align: center; 
+    perspective: 1200px; 
+  }
   .cta h2 { font-size: clamp(2.2rem, 6vw, 4.4rem); }
   .cta h2 em { color: var(--accent); font-style: normal; }
   .cta p { color: rgba(246,243,236,.65); margin-top: 1rem; max-width: 46ch; margin-inline: auto; }
@@ -242,7 +257,13 @@
   .cta .btn:hover { background: var(--accent); color: #fff; }
   .cta .btn.ghost { background: transparent; color: #f6f3ec; border-color: rgba(246,243,236,.4); }
 
-  footer { background: light-dark(#111110, #080806); color: rgba(246,243,236,.55); padding: 3rem 0 2rem; font-size: .85rem; }
+  /* ============ FOOTER (LOCKED COLORS) ============ */
+  footer { 
+    background: #111110; /* Always dark */
+    color: rgba(246,243,236,.55); 
+    padding: 3rem 0 2rem; 
+    font-size: .85rem; 
+  }
   .foot-grid { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
   .foot-grid h4 { color: #f6f3ec; font-size: .95rem; margin-bottom: .6rem; }
   .foot-grid a { color: inherit; text-decoration: none; display: block; margin-bottom: .35rem; }
@@ -250,41 +271,40 @@
   .foot-bottom { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 
   /* =========================================
-     MOBILE OPTIMIZATIONS (The Fix)
+     MOBILE OPTIMIZATIONS
      ========================================= */
   @media (max-width: 950px) { 
-    /* Stack the hero grid vertically and center it */
     .hero-grid { 
       grid-template-columns: 1fr; 
       gap: 3rem; 
       text-align: center; 
     } 
     
-    /* Center the buttons and text */
     .hero-grid > div:first-child {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Scale down the 3D deck so it fits nicely */
     .hero-visual { 
       min-height: 400px; 
     }
     .deck {
-      width: min(100%, 280px); /* Smaller deck on mobile */
+      width: min(100%, 280px); 
     }
 
-    /* Reduce 3D depth to prevent mobile GPU tearing */
     .hero { perspective: 800px; }
 
-    /* Adjust the tier section to stack */
     .tier-top { grid-template-columns: 1fr; margin-bottom: 3rem; text-align: center; }
     .tier-head p { margin-inline: auto; }
     .tier-grid { grid-template-columns: 1fr; gap: 2rem; }
+    
+    /* Make footer stack nicely on mobile */
+    .foot-grid { flex-direction: column; text-align: center; gap: 2rem; }
+    .foot-grid > div { max-width: 100%; margin-inline: auto; }
+    .foot-bottom { flex-direction: column; text-align: center; }
   }
 
-  /* Disable hover tilt on touch devices to prevent sticky glitches */
   @media (hover: none) {
     .tier:hover { transform: none; }
     .tier:nth-child(2):hover { transform: none; }
@@ -440,6 +460,7 @@
   </div>
 </section>
 
+<!-- CTA WITH LOCKED COLORS -->
 <section class="cta" id="contact">
   <div class="wrap">
     <h2>Are you ready to <em>BUILD?</em></h2>
@@ -451,6 +472,7 @@
   </div>
 </section>
 
+<!-- FOOTER WITH LOCKED COLORS -->
 <footer>
   <div class="wrap foot-grid">
     <div>
@@ -477,15 +499,16 @@
   const root = document.documentElement;
   const toggle = document.getElementById('themeToggle');
   const stored = localStorage.getItem('chrismaic-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
+  
+  // Default to light if no stored preference, ignoring system auto-dark to prevent conflict
   function applyTheme(theme) {
     root.setAttribute('data-theme', theme);
-    root.style.colorScheme = theme;
     toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
     localStorage.setItem('chrismaic-theme', theme);
   }
-  applyTheme(stored || (prefersDark ? 'dark' : 'light'));
+  
+  applyTheme(stored || 'light');
+
   toggle.addEventListener('click', function () {
     applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
@@ -517,7 +540,7 @@
   // Smoothing state
   const cardSmoothZ = cards.map((_, i) => -i * 51); 
 
-  // Mouse & Scroll listeners (Disable mouse tracking on mobile)
+  // Mouse & Scroll listeners
   if (!isTouchDevice) {
     heroSection.addEventListener('mousemove', (e) => {
       const rect = heroSection.getBoundingClientRect();
@@ -535,7 +558,6 @@
     const deltaTime = time - lastTime;
     lastTime = time;
 
-    // Smooth mouse tracking (If desktop)
     if (!isTouchDevice) {
       mouseX += (targetX - mouseX) * 0.08;
       mouseY += (targetY - mouseY) * 0.08;
@@ -545,7 +567,6 @@
       mouseY = Math.cos(time * 0.001) * 0.2;
     }
 
-    // Trigger new slides
     if (slidingCardIndex === null) {
       flipTimer += deltaTime;
       if (flipTimer > FLIP_INTERVAL) {
@@ -553,11 +574,9 @@
         startNextSlide();
       }
     } else {
-      // Advance the slide
       slideProgress += deltaTime / FLIP_DURATION;
       
       if (slideProgress >= 1) {
-        // Slide complete
         const slidCard = deckOrder.shift(); 
         deckOrder.push(slidCard);           
         
@@ -566,41 +585,33 @@
       }
     }
 
-    // Render all cards
     deckOrder.forEach((cardIndex, positionIndex) => {
       const card = cards[cardIndex];
       const targetZ = -positionIndex * 51; 
 
       if (cardIndex === slidingCardIndex) {
-        // --- RENDER THE SLIDE-UNDER ---
         const p = slideProgress;
-        
-        // TWO STAGE ANIMATION to prevent glitching
         let currentX, currentY, currentZ;
 
         if (p < 0.5) {
-          // Stage 1: Swoop out to the right
           const stageP = p * 2; 
           currentX = Math.sin(stageP * Math.PI / 2) * 150; 
           currentY = Math.sin(stageP * Math.PI / 2) * 30;
-          currentZ = 0; // Stay at Z=0
+          currentZ = 0;
         } else {
-          // Stage 2: Drop deeply underneath the stack
           const stageP = (p - 0.5) * 2; 
           currentX = 150 * (1 - stageP); 
           currentY = 30 + (stageP * 30);
-          currentZ = -(stageP * 500); // Dive straight to -500
+          currentZ = -(stageP * 500);
         }
 
         card.style.transform = `translate3d(${currentX}px, ${currentY}px, ${currentZ}px)`;
         card.style.zIndex = 1; 
         card.style.opacity = 1;
 
-        // Sync the smooth state
         cardSmoothZ[cardIndex] = currentZ;
 
       } else {
-        // --- RENDER RESTING CARDS WITH DELAYED GLIDE ---
         let effectiveTargetZ = targetZ;
         
         if (slidingCardIndex !== null && slideProgress > 0.6) {
