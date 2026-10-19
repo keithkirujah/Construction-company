@@ -35,7 +35,6 @@
 
   h1, h2, h3 { line-height: 1.05; letter-spacing: -.02em; font-weight: 800; }
   
-  /* FIXED WRAPPER: Added proper padding and max-width */
   .wrap { 
     width: 100%; 
     max-width: 1240px; 
@@ -67,7 +66,11 @@
   .nav-links a { color: var(--ink); text-decoration: none; opacity: .75; transition: opacity .2s; }
   .nav-links a:hover { opacity: 1; }
   .nav-actions { display: flex; align-items: center; gap: 1rem; }
-  @media (max-width: 860px) { .nav-links { display: none; } }
+  
+  /* Hide nav links on mobile */
+  @media (max-width: 860px) { 
+    .nav-links { display: none; } 
+  }
 
   .btn {
     display: inline-block; padding: .85rem 1.6rem; border-radius: 999px;
@@ -96,18 +99,13 @@
 
   .hero-grid {
     display: grid; 
-    /* Adjusted grid to give text more room */
     grid-template-columns: 1.25fr 0.75fr; 
     gap: clamp(2rem, 5vw, 5rem);
     align-items: center; 
     width: 100%;
   }
-  @media (max-width: 950px) { 
-    .hero-grid { grid-template-columns: 1fr; gap: 3rem; } 
-  }
 
   .hero h1 { 
-    /* Slightly smaller max font size to prevent edge touching */
     font-size: clamp(2.5rem, 5.5vw, 4.5rem); 
     transform-style: preserve-3d; 
   }
@@ -163,9 +161,6 @@
     align-items: center;
     margin-bottom: 4rem;
   }
-  @media (max-width: 900px) {
-    .tier-top { grid-template-columns: 1fr; margin-bottom: 3rem; }
-  }
 
   .tier-head h2 { font-size: clamp(2.2rem, 4.5vw, 3.6rem); margin-top: .8rem; }
   .tier-head p { color: var(--muted); margin-top: 1.2rem; font-size: 1.1rem; max-width: 40ch; }
@@ -191,7 +186,6 @@
   }
 
   .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; transform-style: preserve-3d; }
-  @media (max-width: 900px) { .tier-grid { grid-template-columns: 1fr; } }
   
   .tier {
     padding: 2.5rem 2rem; border-radius: var(--radius); background: var(--card);
@@ -254,6 +248,48 @@
   .foot-grid a { color: inherit; text-decoration: none; display: block; margin-bottom: .35rem; }
   .foot-grid a:hover { color: var(--accent); }
   .foot-bottom { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+  /* =========================================
+     MOBILE OPTIMIZATIONS (The Fix)
+     ========================================= */
+  @media (max-width: 950px) { 
+    /* Stack the hero grid vertically and center it */
+    .hero-grid { 
+      grid-template-columns: 1fr; 
+      gap: 3rem; 
+      text-align: center; 
+    } 
+    
+    /* Center the buttons and text */
+    .hero-grid > div:first-child {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Scale down the 3D deck so it fits nicely */
+    .hero-visual { 
+      min-height: 400px; 
+    }
+    .deck {
+      width: min(100%, 280px); /* Smaller deck on mobile */
+    }
+
+    /* Reduce 3D depth to prevent mobile GPU tearing */
+    .hero { perspective: 800px; }
+
+    /* Adjust the tier section to stack */
+    .tier-top { grid-template-columns: 1fr; margin-bottom: 3rem; text-align: center; }
+    .tier-head p { margin-inline: auto; }
+    .tier-grid { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  /* Disable hover tilt on touch devices to prevent sticky glitches */
+  @media (hover: none) {
+    .tier:hover { transform: none; }
+    .tier:nth-child(2):hover { transform: none; }
+    .proj:hover { transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -288,7 +324,7 @@
       <p style="margin-top:1.5rem;font-size:clamp(1.05rem,1.6vw,1.3rem);color:var(--muted);max-width:38ch">
         Chrismaic International Limited delivers premium construction across Murang'a and greater Kenya. Quality made effortless — we build it right and free your time.
       </p>
-      <div style="margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap">
+      <div style="margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
         <a href="#contact" class="btn">Start Your Project</a>
         <a href="#work" class="btn ghost">See Our Work</a>
       </div>
@@ -464,6 +500,7 @@
   
   let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
   let currentScrollY = 0;
+  let isTouchDevice = window.matchMedia('(hover: none)').matches;
 
   // Timings
   let flipTimer = 0;
@@ -480,13 +517,16 @@
   // Smoothing state
   const cardSmoothZ = cards.map((_, i) => -i * 51); 
 
-  // Mouse & Scroll listeners
-  heroSection.addEventListener('mousemove', (e) => {
-    const rect = heroSection.getBoundingClientRect();
-    targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-  });
-  heroSection.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
+  // Mouse & Scroll listeners (Disable mouse tracking on mobile)
+  if (!isTouchDevice) {
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    });
+    heroSection.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
+  }
+
   window.addEventListener('scroll', () => { currentScrollY = window.scrollY; }, { passive: true });
 
   let lastTime = performance.now();
@@ -495,9 +535,15 @@
     const deltaTime = time - lastTime;
     lastTime = time;
 
-    // Smooth mouse tracking
-    mouseX += (targetX - mouseX) * 0.08;
-    mouseY += (targetY - mouseY) * 0.08;
+    // Smooth mouse tracking (If desktop)
+    if (!isTouchDevice) {
+      mouseX += (targetX - mouseX) * 0.08;
+      mouseY += (targetY - mouseY) * 0.08;
+    } else {
+      // Gentle idle float on mobile
+      mouseX = Math.sin(time * 0.001) * 0.2;
+      mouseY = Math.cos(time * 0.001) * 0.2;
+    }
 
     // Trigger new slides
     if (slidingCardIndex === null) {
